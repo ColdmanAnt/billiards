@@ -1,30 +1,75 @@
-# Билд-артефакты
+# ----------------------------
+# Gitignore для C++/CMake/CLion на Windows
+# ----------------------------
+
+# 1. Папки сборки CMake и артефакты
+/build/
 /cmake-build-debug/
 /CMakeFiles/
 /CMakeCache.txt
-*.obj
-*.o
+/CMakeScripts/
+/Makefile
+/install_manifest.txt
+/*.cbp
+/*.layout
+/*.user
+/*.vs/
+
+# 2. Результаты сборки (Windows)
 *.exe
 *.dll
+*.lib
+*.pdb
+*.obj
+*.o
+*.a
 *.so
 *.dylib
 
-# IDE
-.vscode/
-*.idea/
+# 3. CLion и IntelliJ IDEA
+/.idea/
+/*.iml
+/*.iws
+/out/
+/cmake-build-debug/
+/cmake-build-release/
 
-# Visual Studio
+# 4. Visual Studio (если вдруг)
 *.vcxproj*
-*.sdf
-*.opensdf
-*.user
-*.ncb
-*.suo
 *.sln
+*.vcxproj.filters
+*.vcxproj.user
+*.vcproj.*
 
-# MacOS
-.DS_Store
+# 5. Тестовые бинарники
+/tests/*.exe
+/tests/*.dll
 
-# Логи, временные файлы
+# 6. Логи и временные файлы
 *.log
 *.tmp
+*.temp
+
+# 7. macOS и Windows скрытые файлы
+.DS_Store
+Thumbs.db
+
+# 8. Конфигурации IDE и редактора
+.vscode/
+*.code-workspace
+
+# 9. Кэшированные файлы
+*.obj
+*.pch
+*.gch
+
+# 10. Файлы CMake
+/*.cbp
+/*.depend
+*.ninja_deps
+*.ninja_dbg
+
+# 11. Разное
+*.stackdump
+*.err
+*.out
