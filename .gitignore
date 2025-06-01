@@ -1,0 +1,30 @@
+# Билд-артефакты
+/cmake-build-debug/
+/CMakeFiles/
+/CMakeCache.txt
+*.obj
+*.o
+*.exe
+*.dll
+*.so
+*.dylib
+
+# IDE
+.vscode/
+*.idea/
+
+# Visual Studio
+*.vcxproj*
+*.sdf
+*.opensdf
+*.user
+*.ncb
+*.suo
+*.sln
+
+# MacOS
+.DS_Store
+
+# Логи, временные файлы
+*.log
+*.tmp
