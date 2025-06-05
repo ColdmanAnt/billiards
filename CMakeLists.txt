@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.31)
-project(billiards LANGUAGES CXX)
+project(billiards LANGUAGES C CXX)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -32,6 +32,8 @@ endif()
 # ─── Добавляем «глобально» include-пути для Box2D и SFML ─────────
 # Это гарантирует, что CLion и компилятор точно увидят нужные каталоги:
 include_directories(
+        include/thirdparty/glm
+        include/thirdparty/glad
         ${sfml_SOURCE_DIR}/include
         ${box2d_SOURCE_DIR}/include
         ${CMAKE_SOURCE_DIR}/include   # ваши локальные заголовки
@@ -45,6 +47,17 @@ add_executable(billiards
         src/physics/Table.cpp
         src/render/Renderer.cpp
         src/core/InputController.cpp
+        src/render/GLRenderer.cpp
+        src/thirdparty/glad/glad.c
+)
+
+set(SHADER_SOURCE_DIR   "${CMAKE_SOURCE_DIR}/shaders")
+set(SHADER_BINARY_DIR   "$<TARGET_FILE_DIR:billiards>/shaders")
+
+add_custom_command(TARGET billiards POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+        "${SHADER_SOURCE_DIR}"
+        "${SHADER_BINARY_DIR}"
 )
 
 # ─── Линкуем SFML и Box2D ─────────────────────────────────────────
@@ -54,3 +67,5 @@ target_link_libraries(billiards PRIVATE
         sfml-system
         box2d::box2d
 )
+
+file(COPY ${CMAKE_SOURCE_DIR}/assets DESTINATION ${CMAKE_BINARY_DIR})

@@ -6,27 +6,39 @@
 #define INPUTCONTROLLER_HPP
 
 #include <SFML/Graphics.hpp>
+#include <vector>
 #include "physics/Ball.hpp"
 
 namespace core {
 
     class InputController {
     public:
-        explicit InputController(float impulseScale = 5'000.f)
-            : m_impulseScale(impulseScale) {}
+        InputController(float maxDragMeters = 2.f,   // 2 м = 200 px
+                        float maxImpulse    = 2.f)   // 2 Н·с
+            : m_maxDrag(maxDragMeters)
+            , m_maxImpulse(maxImpulse)
+        {}
 
-        /// true → удар выполнен (можно проиграть звук)
-        bool handleEvent(const sf::Event& ev,
-                         sf::RenderWindow& win,
-                         physics::Ball& ball);
+        bool handleEvent(const sf::Event&,
+                         sf::RenderWindow&,
+                         std::vector<physics::Ball>&);
 
-        void drawAim(sf::RenderWindow& win) const;
+        void drawAim(sf::RenderWindow&) const;
 
     private:
-        float        m_impulseScale;
-        bool         m_dragging = false;
-        sf::Vector2f m_start;   // точка нажатия
-        sf::Vector2f m_curr;    // текущий курсор (для прицела)
+        float m_maxDrag;      // метры
+        float m_maxImpulse;   // Н·с
+        bool  m_dragging = false;
+
+        sf::Vector2f m_startPx{},   // ← точка начала drag-а (пиксели)
+                     m_currPx{};    // ← текущий курсор      (пиксели)
+
+        physics::Ball* m_selected = nullptr;
+
+        physics::Ball* findBallUnder(const sf::Vector2f& ptMeters,
+                                            std::vector<physics::Ball>&);
+
+        b2Vec2 computeImpulse(const sf::Vector2f& dragMeters) const;
     };
 
 } // namespace core
