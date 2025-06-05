@@ -71,17 +71,31 @@ void GLRenderer::resize(int w, int h)
 
 unsigned int GLRenderer::compileShader(const char* src, unsigned int type)
 {
-    unsigned int shader = glCreateShader(type);
+    GLuint shader = glCreateShader(type);
     glShaderSource(shader, 1, &src, nullptr);
     glCompileShader(shader);
 
-    // Проверяем статус компиляции
-    int success;
-    glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
-    if (!success) {
-        char infoLog[512];
-        glGetShaderInfoLog(shader, 512, nullptr, infoLog);
-        std::cerr << "Error: Shader compilation failed:\n" << infoLog << "\n";
+    // 1) Проверяем status
+    GLint isCompiled = 0;
+    glGetShaderiv(shader, GL_COMPILE_STATUS, &isCompiled);
+    if (!isCompiled) {
+        // 2) Узнаём длину лога
+        GLint maxLength = 0;
+        glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &maxLength);
+
+        // 3) Если лог есть — выделяем вектор нужного размера
+        if (maxLength > 1) {
+            std::vector<char> errorLog(maxLength);
+            glGetShaderInfoLog(shader, maxLength, &maxLength, errorLog.data());
+            const char* shaderType = (type == GL_VERTEX_SHADER) ? "VERTEX" : "FRAGMENT";
+            std::cerr << "Error: " << shaderType << " shader compilation failed:\n"
+                      << std::string(errorLog.data(), maxLength) << "\n";
+        } else {
+            // Если даже INFO_LOG пустой (maxLength ≤ 1)
+            const char* shaderType = (type == GL_VERTEX_SHADER) ? "VERTEX" : "FRAGMENT";
+            std::cerr << "Error: " << shaderType
+                      << " shader failed to compile, but INFO_LOG is empty\n";
+        }
         glDeleteShader(shader);
         return 0;
     }
@@ -359,3 +373,4 @@ void GLRenderer::drawScene(const std::vector<physics::Ball>&    balls,
     glBindVertexArray(0);
     glUseProgram(0);
 }
+

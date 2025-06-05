@@ -5,6 +5,9 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+file(COPY "${CMAKE_SOURCE_DIR}/shaders"
+        DESTINATION "${CMAKE_BINARY_DIR}")
+
 include(FetchContent)
 
 # → SFML 3.0.0
@@ -51,13 +54,11 @@ add_executable(billiards
         src/thirdparty/glad/glad.c
 )
 
-set(SHADER_SOURCE_DIR   "${CMAKE_SOURCE_DIR}/shaders")
-set(SHADER_BINARY_DIR   "$<TARGET_FILE_DIR:billiards>/shaders")
-
-add_custom_command(TARGET billiards POST_BUILD
+add_custom_command(
+        TARGET billiards POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_directory
-        "${SHADER_SOURCE_DIR}"
-        "${SHADER_BINARY_DIR}"
+        "${CMAKE_SOURCE_DIR}/shaders"          # <- откуда
+        "$<TARGET_FILE_DIR:billiards>/shaders" # <- куда
 )
 
 # ─── Линкуем SFML и Box2D ─────────────────────────────────────────

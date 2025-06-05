@@ -45,6 +45,7 @@ private:
     /// Возвращает ID программы или 0 при ошибке.
     unsigned int linkProgram(unsigned int vs, unsigned int fs);
 
+
     /// Генерирует меш сферы (VBO/IBO). \p radius — радиус в метрах, \p rings и \p sectors
     /// определяют детализацию. Заполняет m_vaoSphere, m_vboSphere, m_iboSphere, m_indexCount.
     void createSphereMesh(float radius, int rings, int sectors);
@@ -52,6 +53,8 @@ private:
     /// Генерирует меш стола и бортов. \p wPx и \p hPx — размеры стола в пикселях,
     /// \p hBorderPx — высота борта в пикселях. Заполняет m_vaoTable, m_vboTable.
     void createTableMesh(float wPx, float hPx, float hBorderPx);
+
+
 
 private:
     // OpenGL-объекты:
